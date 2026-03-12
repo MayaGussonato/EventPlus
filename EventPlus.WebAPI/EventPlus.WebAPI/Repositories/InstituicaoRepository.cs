@@ -5,12 +5,12 @@ using EventPlus.WebAPI.Models;
 
 namespace EventPlus.WebAPI.Repositories;
 
-public class TipoInstituicaoRepository : IInstituicaoRepository
+public class InstituicaoRepository : IInstituicaoRepository
 {
     private readonly EventContext _context;
 
     // Injeção de dependência: recebe o contexto pelo construtor
-    public TipoInstituicaoRepository(EventContext context)
+    public InstituicaoRepository(EventContext context)
     {
         _context = context;
     }
@@ -20,14 +20,14 @@ public class TipoInstituicaoRepository : IInstituicaoRepository
     /// </summary>
     /// <param name="id">Id da instituição a ser atualizada</param>
     /// <param name="tipoInstituicao">Novos dados da instituição</param>
-    public void Atualizar(Guid id, Instituicao tipoInstituicao)
+    public void Atualizar(Guid id, Instituicao Instituicao)
     {
         var instituicaoBuscada = _context.Instituicaos.Find(id);
 
         if (instituicaoBuscada != null)
         {
-            //Atualiza os campos do tipo de evento buscado com os novos dados
-            instituicaoBuscada.NomeFantasia = tipoInstituicao.NomeFantasia;
+            //Atualiza os campos do tipo de instituicao buscado com os novos dados
+            instituicaoBuscada.NomeFantasia = Instituicao.NomeFantasia;
 
             //Detecta a mudança na propriedade "Titulo" automaticamente
             _context.SaveChanges();
