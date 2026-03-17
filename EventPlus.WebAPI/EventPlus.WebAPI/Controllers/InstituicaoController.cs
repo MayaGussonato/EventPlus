@@ -86,8 +86,9 @@ namespace EventPlus.WebAPI.Controllers
             {
                 var instituicaoAtualizada = new Instituicao
                 {
+                    Cnpj = instituicao.Cnpj!,
                     NomeFantasia = instituicao.NomeFantasia!,
-                    Cnpj = instituicao.Cnpj!
+                    Endereco = instituicao.Endereco!
                 };
 
                 _instituicaoRepository.Atualizar(id, instituicaoAtualizada);

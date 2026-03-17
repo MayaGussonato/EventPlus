@@ -22,12 +22,17 @@ public class InstituicaoRepository : IInstituicaoRepository
     /// <param name="tipoInstituicao">Novos dados da instituição</param>
     public void Atualizar(Guid id, Instituicao Instituicao)
     {
+        //ao usar o Find, o EF comeca a Observar este objeto
         var instituicaoBuscada = _context.Instituicaos.Find(id);
 
         if (instituicaoBuscada != null)
         {
-            //Atualiza os campos do tipo de instituicao buscado com os novos dados
-            instituicaoBuscada.NomeFantasia = Instituicao.NomeFantasia;
+            instituicaoBuscada.Cnpj = String.IsNullOrWhiteSpace(Instituicao.Cnpj) ? instituicaoBuscada.Cnpj :
+            Instituicao.Cnpj;
+            instituicaoBuscada.Endereco = String.IsNullOrWhiteSpace(Instituicao.Endereco) ? instituicaoBuscada.Endereco: 
+            Instituicao.Endereco;
+            instituicaoBuscada.NomeFantasia = String.IsNullOrWhiteSpace(Instituicao.NomeFantasia) ? instituicaoBuscada.NomeFantasia : 
+            Instituicao.NomeFantasia;
 
             //Detecta a mudança na propriedade "Titulo" automaticamente
             _context.SaveChanges();
