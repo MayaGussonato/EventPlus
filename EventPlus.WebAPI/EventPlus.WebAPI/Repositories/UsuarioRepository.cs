@@ -34,7 +34,7 @@ public class UsuarioRepository : IUsuarioRepository
             FirstOrDefault(usuario => usuario.Email == email);
 
         //Verificamos se o usuario foi encontrado
-        if (usuarioBuscado == null)
+        if (usuarioBuscado != null)
         {
             //compramos o hash da senha digitada com oque esta no banco
             bool confere = Criptografia.CompararHash(senha, usuarioBuscado.Senha);

@@ -37,5 +37,6 @@ public partial class Usuario
     public virtual TipoUsuario? IdTipoUsuarioNavigation { get; set; }
 
     [InverseProperty("IdUsuarioNavigation")]
+    [JsonIgnore]
     public virtual ICollection<Presenca> Presencas { get; set; } = new List<Presenca>();
 }

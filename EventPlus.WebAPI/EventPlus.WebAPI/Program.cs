@@ -2,6 +2,7 @@ using EventPlus.WebAPI.BdContextEvet;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,43 @@ builder.Services.AddScoped<ITipoUsuarioRepository, TipoUsuarioRepository>();
 
 //Registra os repositórios para injeção de dependência
 builder.Services.AddScoped< IInstituicaoRepository, InstituicaoRepository>();
+
+//Registra os repositórios para injeção de dependência
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+//Registra os repositórios para injeção de dependência
+builder.Services.AddScoped<IEventoRepository, EventoRepository>();
+
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "JwtBearer";
+    options.DefaultChallengeScheme = "JwtBearer";
+})
+.AddJwtBearer("JwtBearer", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        //  Validações
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        // MESMA CHAVE DO TOKEN
+        IssuerSigningKey = new SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes("event-chave-autenticacao-webapi-2026")
+        ),
+
+        //  PADRÃO IGUAL AO TOKEN
+        ValidIssuer = "Event.WebAPI",
+        ValidAudience = "Event.WebAPI",
+
+        //  tolerância de tempo
+        ClockSkew = TimeSpan.FromMinutes(5)
+    };
+});
 
 //adiciona Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -88,3 +126,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

@@ -8,7 +8,7 @@ public interface IEventoRepository
     void Deletar(Guid id);
     List<Evento> Listar();
     void Atualizar(Guid id, Evento evento);
-    List<Evento> ListarPorTipo(Guid Id);
+    List<Evento> ListarPorId(Guid Id);
     List<Evento> ProximosEventos();
     Evento BuscarPorId(Guid id);
 }
