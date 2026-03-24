@@ -4,11 +4,11 @@ namespace EventPlus.WebAPI.Interfaces;
 
 public interface IPresencaRepository
 {
-    void Increver(Presenca presenca);
+    void Inscrever(Presenca Inscricao);
     void Deletar(Guid id);
     List<Presenca> Listar();
-    Presenca BuscarPorId(Guid IdUsuario, Guid IdEvento);
-    void Atualizar(Guid id);
-    List<Presenca>ListarMinhas(Guid IdUsuario);
+    Presenca BuscarPorId(Guid id);
+    void Atualizar(Guid id, Presenca presencaAtualizada);
+    List<Presenca> ListarMinhas(Guid IdUsuario);
 
 }

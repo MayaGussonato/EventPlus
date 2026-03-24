@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Models;
 
+[Table("ComentarioEvento")]
 public partial class ComentarioEvento
 {
     [Key]
-    public Guid IdComentarioEventos { get; set; }
+    public Guid IdComentarioEvento { get; set; }
 
     [StringLength(200)]
     [Unicode(false)]
@@ -18,7 +19,7 @@ public partial class ComentarioEvento
     public bool Exibe { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime DataComentarioevento { get; set; }
+    public DateTime DataComentarioEvento { get; set; }
 
     public Guid? IdUsuario { get; set; }
 
