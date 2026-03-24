@@ -1,4 +1,6 @@
-﻿using EventPlus.WebAPI.DTO;
+﻿using Azure;
+using Azure.AI.ContentSafety;
+using EventPlus.WebAPI.DTO;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,11 +12,60 @@ namespace EventPlus.WebAPI.Controllers;
 [ApiController]
 public class ComentarioEventoController : ControllerBase
 {
+    private readonly ContentSafetyClient _contentSafetyClient;
     private readonly IComentarioEventoRepository _comentarioEventoRepository;
 
-    public ComentarioEventoController(IComentarioEventoRepository comentarioEventoRepository)
+        public ComentarioEventoController(ContentSafetyClient 
+            contentSafetyClient, IComentarioEventoRepository 
+            comentarioEventoRepository)
     {
+        _contentSafetyClient = contentSafetyClient;
         _comentarioEventoRepository = comentarioEventoRepository;
+    }
+    /// <summary>
+    /// Endponit da API que cadastra e modera um comentario
+    /// </summary>
+    /// <param name="comentarioevento">comentario a ser moderado</param>
+    /// <returns>Status code 201 e o comentario criado</returns>
+    [HttpPost]
+    public async Task<IActionResult> Cadastrar (ComentarioEventoDTO comentarioevento)
+    {
+        try 
+        {
+          if (string.IsNullOrEmpty(comentarioevento . Descricao))
+          {
+            return BadRequest("O Texto a ser moderado nao pode estar vazio.");
+          }
+
+            //criar objeto de analise
+            var request = new AnalyzeTextOptions(comentarioevento . Descricao);
+
+            //chamar a Api do azure content safety
+            Response<AnalyzeTextResult> response = await 
+                _contentSafetyClient.AnalyzeTextAsync(request);
+
+            // verificar se o texto tem alguma severidade maio que 0
+            bool temConteudoImproprio = response.Value.CategoriesAnalysis.Any(comentario => comentario.Severity > 0);
+
+            var novoComentario =new ComentarioEvento
+            {
+                Descricao = comentarioevento.Descricao,
+                IdUsuario = comentarioevento.IdUsuario,
+                IdEvento = comentarioevento.IdEvento,
+                DataComentarioEvento = DateTime.Now,
+                //Define se o comenttario vai ser exibido
+                Exibe = !temConteudoImproprio 
+            };
+
+            //cadastrar o comentario
+            _comentarioEventoRepository.Cadastrar(novoComentario);
+
+            return StatusCode(201, novoComentario);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpGet("Evento/{idEvento}")]
@@ -60,30 +111,6 @@ public class ComentarioEventoController : ControllerBase
             return BadRequest(erro.Message);
         }
     }
-
-    [HttpPost]
-    public IActionResult Cadastrar(ComentarioEventoDTO comentarioevento)
-    {
-        try
-        {
-            var novoComentarioEvento = new ComentarioEvento
-            {
-                Descricao = comentarioevento.Descricao!,
-                Exibe = comentarioevento.Exibe!,
-                DataComentarioEvento = comentarioevento.DataComentarioEvento!,
-                IdUsuario = comentarioevento.IdUsuario!,
-                IdEvento = comentarioevento.IdEvento!
-            };
-
-            _comentarioEventoRepository.Cadastrar(novoComentarioEvento);
-            return StatusCode(201, novoComentarioEvento);
-        }
-        catch (Exception erro)
-        {
-            return BadRequest(erro.Message);
-        }
-    }
-
     [HttpDelete("{id}")]
     public IActionResult Delete(Guid id)
     {

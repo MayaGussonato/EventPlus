@@ -40,6 +40,6 @@ public partial class Evento
     public virtual TipoEvento? IdtipoEventoNavigation { get; set; }
 
     [InverseProperty("IdEventoNavigation")]
-    
+    [JsonIgnore]
     public virtual ICollection<Presenca> Presencas { get; set; } = new List<Presenca>();
 }

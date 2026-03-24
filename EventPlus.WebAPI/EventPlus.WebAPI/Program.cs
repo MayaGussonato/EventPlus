@@ -6,8 +6,20 @@ using EventPlus.WebAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Azure.AI.ContentSafety;
+using Azure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var endpoint = "https://moderatorservice-marcos.cognitiveservices.azure.com/";
+var apiKey = 
+
+
+var client = new ContentSafetyClient(new Uri
+    (endpoint), new AzureKeyCredential
+    (apiKey));
+
+builder.Services.AddSingleton(client);
 
 // 1. Configurar o Contexto do Banco de Dados
 builder.Services.AddDbContext<EventContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -31,10 +43,12 @@ builder.Services.AddScoped<IEventoRepository, EventoRepository>();
 builder.Services.AddScoped<IPresencaRepository, PresencaRepository>();
 
 // Registrar as Repositories (Injeção de Dependência)
-builder.Services.AddScoped<IComentarioEventoRepository, ComentarioEventoRepository>();
+builder.Services.AddScoped<IPresencaRepository, PresencaRepository>();
 
 // Registrar as Repositories (Injeção de Dependência)
-builder.Services.AddScoped<IPresencaRepository, PresencaRepository>();
+builder.Services.AddScoped<IComentarioEventoRepository, ComentarioEventoRepository>();
+
+
 
 
 //Adiciona Swagger

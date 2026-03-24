@@ -38,9 +38,9 @@ public partial class EventContext : DbContext
     {
         modelBuilder.Entity<ComentarioEvento>(entity =>
         {
-            entity.HasKey(e => e.IdComentarioEvento).HasName("PK__Comentar__DD80871EF4F27D10");
+            entity.HasKey(e => e.IdComentarioEventos).HasName("PK__Comentar__DD80871EF4F27D10");
 
-            entity.Property(e => e.IdComentarioEvento).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.IdComentarioEventos).HasDefaultValueSql("(newid())");
 
             entity.HasOne(d => d.IdEventoNavigation).WithMany(p => p.ComentarioEventos).HasConstraintName("FK__Comentari__IdEve__76969D2E");
 

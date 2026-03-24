@@ -2,11 +2,13 @@
 
 public class ComentarioEventoDTO
 {
-    public string Descricao { get; set; } = null!;
-    public bool Exibe { get; set; }
-    public DateTime DataComentarioEvento { get; set; }
-
+    public string Descricao { get; set; } 
     public Guid? IdUsuario { get; set; }
 
     public Guid? IdEvento { get; set; }
+
+  
+
+
+
 }

@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace EventPlus.WebAPI.Models;
 
-[Table("ComentarioEvento")]
+[Table("ComentarioEventos")]
 public partial class ComentarioEvento
 {
     [Key]
-    public Guid IdComentarioEvento { get; set; }
+    public Guid IdComentarioEventos { get; set; }
 
     [StringLength(200)]
     [Unicode(false)]
@@ -27,9 +28,11 @@ public partial class ComentarioEvento
 
     [ForeignKey("IdEvento")]
     [InverseProperty("ComentarioEventos")]
+    [JsonIgnore]
     public virtual Evento? IdEventoNavigation { get; set; }
 
     [ForeignKey("IdUsuario")]
     [InverseProperty("ComentarioEventos")]
+    [JsonIgnore]
     public virtual Usuario? IdUsuarioNavigation { get; set; }
 }
